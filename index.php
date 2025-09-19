@@ -10,7 +10,7 @@
     }
     
     //executa a query com base na conexão
-    include_once('src/conexao.php');
+    include_once('./database/conexao.php');
     
     //executa a query com base na conexão
     $query = mysqli_query($conexao, "select * from usuarios");
