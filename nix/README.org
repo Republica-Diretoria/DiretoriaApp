@@ -13,17 +13,17 @@
   - [[#boot][Boot]]
     - [[#bootloader][Bootloader]]
     - [[#tmpfs][tmpfs]]
-    - [[#configurações-de-rede][Configurações de rede]]
-    - [[#locale][locale]]
-    - [[#usuários][Usuários]]
-    - [[#shell-e-variáveis-de-ambiente][Shell e Variáveis de ambiente]]
-    - [[#unfree-packages][Unfree packages]]
-    - [[#sudo][sudo]]
-    - [[#ld][ld]]
-    - [[#instalação-de-pacotes][Instalação de pacotes]]
-    - [[#openssh][openssh]]
-    - [[#versão-do-so][Versão do SO]]
-    - [[#configurações-do-server][Configurações do server]]
+  - [[#configurações-de-rede][Configurações de rede]]
+  - [[#locale][locale]]
+  - [[#usuários][Usuários]]
+  - [[#shell-e-variáveis-de-ambiente][Shell e Variáveis de ambiente]]
+  - [[#unfree-packages][Unfree packages]]
+  - [[#sudo][sudo]]
+  - [[#ld][ld]]
+  - [[#instalação-de-pacotes][Instalação de pacotes]]
+  - [[#openssh][openssh]]
+  - [[#versão-do-so][Versão do SO]]
+  - [[#configurações-do-server][Configurações do server]]
       - [[#firewall][Firewall]]
       - [[#apache][Apache]]
       - [[#mysql][MySQL]]
@@ -102,7 +102,7 @@ Por padrão, o NixOS não utiliza /tmpfs/ (o diretório =/tmp=). A linha a segui
 
 #+end_src 
 
-*** Configurações de rede
+** Configurações de rede
 Aqui, o hostname é definido e o serviço NetworkManager é ativado (equivalente a ~systemctl enable NetworkManager~)
 
 #+begin_src nix :tangle ./configuration.nix
@@ -112,7 +112,7 @@ Aqui, o hostname é definido e o serviço NetworkManager é ativado (equivalente
 
 #+end_src 
 
-*** locale
+** locale
 Aqui, as configurações de locale são definidas (timezone, encoding, layout de teclado, /etc/)
 
 #+begin_src nix :tangle ./configuration.nix
@@ -136,7 +136,7 @@ Aqui, as configurações de locale são definidas (timezone, encoding, layout de
 
 #+end_src 
 
-*** Usuários
+** Usuários
 Os usuários são também definidos neste arquivo, com possibilidade de instalar pacotes apenas para usuários, configuração dos shells, grupos, variáveis globais para usuários (por exemplo, ~EDITOR~), e outras *várias* configurações
 
 #+begin_src nix :tangle ./configuration.nix
@@ -169,7 +169,7 @@ Os usuários são também definidos neste arquivo, com possibilidade de instalar
 
 #+end_src 
 
-*** Shell e Variáveis de ambiente
+** Shell e Variáveis de ambiente
 As configurações globais do zsh e variáveis de ambiente globais são definidas aqui
 
 #+begin_src nix :tangle ./configuration.nix
@@ -186,7 +186,7 @@ As configurações globais do zsh e variáveis de ambiente globais são definida
 
 #+end_src 
 
-*** Unfree packages
+** Unfree packages
 Por padrão, o Nix não aceita pacotes não FOSS. Aqui definimos que ele deve aceitar, caso especificado
 
 #+begin_src nix :tangle ./configuration.nix
@@ -195,7 +195,7 @@ Por padrão, o Nix não aceita pacotes não FOSS. Aqui definimos que ele deve ac
 
 #+end_src 
 
-*** sudo
+** sudo
 Aqui o sudo é configurado
 
 #+begin_src nix :tangle ./configuration.nix
@@ -204,7 +204,7 @@ Aqui o sudo é configurado
 
 #+end_src 
 
-*** ld
+** ld
 Devido ao seu sistema de arquivos, de pacotes e como programas são instalados nele, binários genéricos para Linux não funcionam nele. Aqui, há uma tentativa de compatibilidade, ativando o =ld=
 
 #+begin_src nix :tangle ./configuration.nix
@@ -216,7 +216,7 @@ Devido ao seu sistema de arquivos, de pacotes e como programas são instalados n
 
 #+end_src 
 
-*** Instalação de pacotes
+** Instalação de pacotes
 Os pacotes são instalados também nesse arquivo, nesta seção
 
 #+begin_src nix :tangle ./configuration.nix
@@ -229,7 +229,7 @@ Os pacotes são instalados também nesse arquivo, nesta seção
 
 #+end_src 
 
-*** openssh
+** openssh
 Para a utilização do server, estamos usando ssh
 
 #+begin_src nix :tangle ./configuration.nix
@@ -238,7 +238,7 @@ Para a utilização do server, estamos usando ssh
 
 #+end_src 
 
-*** Versão do SO
+** Versão do SO
 Por fim, a versão e atualizações automáticas:
 
 #+begin_src nix :tangle ./configuration.nix
@@ -253,7 +253,7 @@ Por fim, a versão e atualizações automáticas:
 
 #+end_src 
 
-*** Configurações do server
+** Configurações do server
 Aqui estão as configurações do servidor (Apache, PHP e MySQL)
 **** Firewall
 Para utilização de servidores web, é necessário abrir as portas 80 (HTTP) e 443 (HTTPS)
