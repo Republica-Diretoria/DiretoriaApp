@@ -1,0 +1,365 @@
+#+TITLE: Configuração do Nix
+#+AUTHOR: Felipe Canteiro
+#+DESCRIPTION: Configuração do servidor local de testes
+#+LANGUAGE: pt
+#+OPTIONS: date:nil
+#+EXCLUDE_TAGS: noexport
+
+* TOC :toc_4:noexport:
+- [[#visão-geral][Visão geral]]
+- [[#configurationnix][=configuration.nix=]]
+  - [[#import][Import]]
+  - [[#configuração-de-hardware][Configuração de hardware]]
+  - [[#boot][Boot]]
+    - [[#bootloader][Bootloader]]
+    - [[#tmpfs][tmpfs]]
+  - [[#configurações-de-rede][Configurações de rede]]
+  - [[#locale][locale]]
+  - [[#usuários][Usuários]]
+  - [[#shell-e-variáveis-de-ambiente][Shell e Variáveis de ambiente]]
+  - [[#unfree-packages][Unfree packages]]
+  - [[#sudo][sudo]]
+  - [[#ld][ld]]
+  - [[#instalação-de-pacotes][Instalação de pacotes]]
+  - [[#openssh][openssh]]
+  - [[#versão-do-so][Versão do SO]]
+  - [[#configurações-do-server][Configurações do server]]
+      - [[#firewall][Firewall]]
+      - [[#apache][Apache]]
+      - [[#mysql][MySQL]]
+      - [[#criação-da-estrutura-de-diretórios][Criação da estrutura de diretórios]]
+- [[#source-derivationnix][=source-derivation.nix=]]
+
+* Visão geral
+O sistema Nix, em especial o NixOS, utiliza configuração declarativa. Portanto, um arquivo de configuração - ou, idealmente, vários arquivos modularizados - é o que controla o sistema.
+Este sistema declarativo permite que, diferentes instalações do Nix, se tiverem o mesmo arquivo de configuração, são essencialmente *idênticos*.
+Esta abordagem garante alta reprodutibilidade, facilitando a configuração de ambientes.
+
+Em um sistema NixOS, estão presentes no mínimo 2 arquivos de configuração:
+  + =hardware-configuration.nix=: responsável pela configuração do hardware onde o SO roda. Este, diferentemente de outros, geralmente varia entre instalações;
+  + =configuration.nix=: arquivo principal de configuração do SO. Ele configura os serviços, usuários, pacotes, atualizações, /etc/. é por ele que a configuração do sistema é feita, e é planejada para ser portável. Esse é o arquivo [[./configuration.nix][presente no repositório]], uma vez que é o que fundamenta a instalação.
+
+Além disso, outros arquivos podem ser criados para modularização, criar derivações, /flakes/, entre *muitas* outras coisas (Nix, além de um gerenciador de pacotes e um sistema operacional, é também uma linguagem Turing-complete).
+
+Neste repositório, [[./source-derivation.nix][existe também o arquivo]] =source-derivation.nix=. Este arquivo é usado para manter o código do servidor atualizado com o repositório. 
+
+* =configuration.nix=
+Como dito antes, esse é o principal arquivo de configuração. Vamos entender sua estrutura.
+
+O arquivo =configuration.nix= é uma função, que recebe os atributos
+  + ~config~: configuração atual do sistema
+  + ~pkgs~: pacotes disponíveis
+  + ~...~: simboliza que a função pode receber outros atributos, mas não são especificados aqui
+
+#+begin_src nix :tangle ./configuration.nix
+{ config, pkgs, ... }:
+
+#+end_src
+
+
+O trecho a seguir será mais compreensível durante a configuração do arquivo =source-derivation.nix=.
+Em resumo, ela importa o arquivo para a configuração geral do sistema
+** Import
+
+#+begin_src nix :tangle ./configuration.nix
+let
+  source = import ./source-derivation.nix { inherit pkgs; };
+in
+#+end_src
+
+** Configuração de hardware
+A partir de agora, começa a configuração do sistema em si. Esta estrutura é, mais ou menos, igual a outros arquivos de configuração do Nix.
+
+Como dito antes, o arquivo =hardware-configuration.nix= é, como diz o nome, a configuração do hardware. Ela dificilmente é portável, dado a sua natureza. 
+
+#+begin_src nix :tangle ./configuration.nix
+{
+  imports =
+    [
+      ./hardware-configuration.nix
+    ];
+
+#+end_src
+
+** Boot
+*** Bootloader
+A seguir, estão as configurações do grub, que são feitas na instalação do grub em outras distros
+
+#+begin_src nix :tangle ./configuration.nix
+
+  boot.loader.grub.enable = true;
+  boot.loader.grub.device = "/dev/sda";
+  boot.loader.grub.useOSProber = true;
+
+#+end_src
+
+*** tmpfs
+Por padrão, o NixOS não utiliza /tmpfs/ (o diretório =/tmp=). A linha a seguir ativa ele
+
+#+begin_src nix :tangle ./configuration.nix
+
+  boot.tmp.useTmpfs = true;
+
+#+end_src 
+
+** Configurações de rede
+Aqui, o hostname é definido e o serviço NetworkManager é ativado (equivalente a ~systemctl enable NetworkManager~)
+
+#+begin_src nix :tangle ./configuration.nix
+
+  networking.hostName = "servidorDiretoria"; # Define your hostname.
+  networking.networkmanager.enable = true;
+
+#+end_src 
+
+** locale
+Aqui, as configurações de locale são definidas (timezone, encoding, layout de teclado, /etc/)
+
+#+begin_src nix :tangle ./configuration.nix
+  time.timeZone = "America/Sao_Paulo";
+
+  i18n.defaultLocale = "pt_BR.UTF-8";
+
+  i18n.extraLocaleSettings = {
+    LC_ADDRESS = "pt_BR.UTF-8";
+    LC_IDENTIFICATION = "pt_BR.UTF-8";
+    LC_MEASUREMENT = "pt_BR.UTF-8";
+    LC_MONETARY = "pt_BR.UTF-8";
+    LC_NAME = "pt_BR.UTF-8";
+    LC_NUMERIC = "pt_BR.UTF-8";
+    LC_PAPER = "pt_BR.UTF-8";
+    LC_TELEPHONE = "pt_BR.UTF-8";
+    LC_TIME = "pt_BR.UTF-8";
+  };
+
+  console.keyMap = "br-abnt2";
+
+#+end_src 
+
+** Usuários
+Os usuários são também definidos neste arquivo, com possibilidade de instalar pacotes apenas para usuários, configuração dos shells, grupos, variáveis globais para usuários (por exemplo, ~EDITOR~), e outras *várias* configurações
+
+#+begin_src nix :tangle ./configuration.nix
+
+  users.users.rego = {
+    isNormalUser = true;
+    shell = pkgs.zsh;
+    description = "rego";
+    extraGroups = [ "networkmanager" "wheel" ];
+    packages = with pkgs; [
+    ];
+  };
+
+  users.users.gru = {
+    isNormalUser = true;
+    shell = pkgs.zsh;
+    description = "gru";
+    extraGroups = [ "networkmanager" "wheel" ];
+    packages = with pkgs; [
+    ];
+  };
+
+  users.users.bibi = {
+    isNormalUser = true;
+    description = "bibi";
+    extraGroups = [ "networkmanager" "wheel" ];
+    packages = with pkgs; [
+    ];
+  };
+
+#+end_src 
+
+** Shell e Variáveis de ambiente
+As configurações globais do zsh e variáveis de ambiente globais são definidas aqui
+
+#+begin_src nix :tangle ./configuration.nix
+
+  programs.zsh = {
+    enable = true;
+    enableCompletion = true;
+    autosuggestions.enable = true;
+    syntaxHighlighting.enable = true;
+  };
+
+  environment.variables.EDITOR = "nvim";
+  environment.variables.PATH = "${pkgs.clang-tools}/bin:$PATH";
+
+#+end_src 
+
+** Unfree packages
+Por padrão, o Nix não aceita pacotes não FOSS. Aqui definimos que ele deve aceitar, caso especificado
+
+#+begin_src nix :tangle ./configuration.nix
+
+  nixpkgs.config.allowUnfree = true;
+
+#+end_src 
+
+** sudo
+Aqui o sudo é configurado
+
+#+begin_src nix :tangle ./configuration.nix
+
+  security.sudo.enable = true;
+
+#+end_src 
+
+** ld
+Devido ao seu sistema de arquivos, de pacotes e como programas são instalados nele, binários genéricos para Linux não funcionam nele. Aqui, há uma tentativa de compatibilidade, ativando o =ld=
+
+#+begin_src nix :tangle ./configuration.nix
+
+  programs.nix-ld.enable = true;
+  programs.nix-ld.libraries = with pkgs; [
+    stdenv.cc.cc
+  ];
+
+#+end_src 
+
+** Instalação de pacotes
+Os pacotes são instalados também nesse arquivo, nesta seção
+
+#+begin_src nix :tangle ./configuration.nix
+
+  environment.systemPackages = with pkgs; [
+    git
+    neovim
+    wget
+  ];
+
+#+end_src 
+
+** openssh
+Para a utilização do server, estamos usando ssh
+
+#+begin_src nix :tangle ./configuration.nix
+
+  services.openssh.enable = true;
+
+#+end_src 
+
+** Versão do SO
+Por fim, a versão e atualizações automáticas:
+
+#+begin_src nix :tangle ./configuration.nix
+
+  system.stateVersion = "25.05";
+
+  system.autoUpgrade = {
+    enable = true;
+    dates = "04:00";
+    randomizedDelaySec = "45min";
+  };
+
+#+end_src 
+
+** Configurações do server
+Aqui estão as configurações do servidor (Apache, PHP e MySQL)
+**** Firewall
+Para utilização de servidores web, é necessário abrir as portas 80 (HTTP) e 443 (HTTPS)
+
+#+begin_src nix :tangle ./configuration.nix
+
+  networking.firewall = {
+    allowPing = true;
+    allowedTCPPorts = [ 80 443 ];
+  };
+
+#+end_src 
+**** Apache
+O Apache é configurado pelo =services.httpd=.
+
+Aqui, ele é ativado junto com PHP (~enablePHP = true;~).
+É configurado um virtualhost qualquer apenas para fins de configuração (~example.org~).
+
+Os arquivos do servidor são puxados do repositório, (~documentRoot = source.source-code;~). É aqui que aquele import do começo do arquivo passa a fazer sentido. Ele importa o arquivo como uma "variável" =source=, e definimos a raiz do servidor como o atributo =source-code= desta "variável". O conteúdo do arquivo =source-derivation.nix= será exposto mais a seguir
+
+#+begin_src nix :tangle ./configuration.nix
+
+  services.httpd = {
+    enable = true;
+    adminAddr = "felipetzne12@gmail.com";
+    enablePHP = true;
+    virtualHosts."example.org" = {
+      documentRoot = source.source-code;
+      # want ssl + a let's encrypt certificate? add `forceSSL = true;` right here
+    };
+  };
+
+#+end_src 
+
+**** MySQL
+O serviço MySQL é ativado, e é instalado o MariaDB
+
+#+begin_src nix :tangle ./configuration.nix
+
+  services.mysql = {
+    enable = true;
+    package = pkgs.mariadb;
+#+end_src 
+
+Aqui é determinado um bootstrap. Caso não exista tabela na primeira vez que o banco de dados for iniciado, ele cria uma tabale de nome =tabela=, e o usuário =rego= com todas as permissões do banco
+
+#+begin_src nix :tangle ./configuration.nix
+    initialDatabases = [
+      { name = "tabela";
+        schema = pkgs.writeText "init.sql" ''
+          CREATE TABLE entries (text TEXT);
+        '';
+      }
+    ];
+    ensureUsers = [
+      { name = "rego";
+        ensurePermissions = {
+          "rego.*" = "ALL PRIVILEGES";
+        };
+      }
+    ];
+  };
+
+#+end_src 
+**** Criação da estrutura de diretórios
+Isso precisa ser configurado de um jeito mais estável. Em resumo, o systemd cria os diretórios para o web server
+ #+begin_src nix :tangle ./configuration.nix
+
+  systemd.tmpfiles.rules = [
+    "d /var/www/mysite.com"
+    "f /var/www/mysite.com/index.php - - - - <?php phpinfo();"
+  ];
+
+}
+
+#+end_src 
+
+* =source-derivation.nix=
+Aqui está definido o caminho do repositório o qual deve ser inicializado no web server.
+#+begin_src nix :tangle ./source-derivation.nix
+{ pkgs ? import <nixpkgs> {} }:
+
+with pkgs;
+
+{
+#+end_src 
+
+Em resumo, durante o build a variável source-code é inicializada, com o caminho do código (=src=) sendo definido para o repositório do projeto.
+#+begin_src nix :tangle ./source-derivation.nix
+
+  source-code = stdenv.mkDerivation {
+    name = "source-code-php";
+
+    src = MUDAR;
+
+#+end_src 
+
+É especificado que, durante a fase de instalação, o conteúdo de =src= deve ser copiado para =out=. Lembrando que os arquivos de configuração são funções. Assim, o conteúdo de =src= é retornado pela função, no atributo =source-code=.
+
+#+begin_src nix :tangle ./source-derivation.nix
+    phases = [ "installPhase" ];
+    installPhase = ''
+      cp -r $src $out
+    '';
+  };
+}
+#+end_src 
+
+Desta forma, quando o arquivo =source-derivation.nix= é importado em =configuration.nix=, ele é armazenado na variável =source=, que armazena o retorno da função. então, quando o Apache utiliza a raiz do projeto como =source.sourcecode=, ele está, em resumo copiando os arquivos do repositório para a raiz do projeto
