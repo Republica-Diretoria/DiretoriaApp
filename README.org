@@ -11,19 +11,19 @@ O sistema armazenará dados sobre as atividades da república em diferentes áre
 ** 2. Visão Geral da Aplicação
 O site será composto por uma tela de login/cadastro, que direcionará o usuário a uma página com um calendário, e cards que direcionam o usuário para: salgados, pedido de manutenção, e um controle de produtos. 
 *** 2.1 Calendário
-O calendário será apresentado visualmente usando javascript, e usará os dados contidos no banco de dados para diferentes visualizações. Um usuário ativo, membro da área _X_ deve ser capaz de visualizar todos os eventos pertencentes à sua área, e da área _geral_, uma área especial criada para que possamos compartilhar informações e datas pertinentes a todos.
+O calendário será apresentado visualmente usando javascript, e usará os dados contidos no banco de dados para diferentes visualizações. Um usuário ativo, membro de áreas administrativas deve ser capaz de visualizar todos os eventos pertencentes às sua áreas, e da área _geral_, uma área especial criada para que possamos compartilhar informações e datas pertinentes a todos.
 Posteriormente, um usuário deve ser capaz de adicionar eventos e removê-los, selecionado a qual área o evento pertence.
 *** 2.2 Pedido de manutenção
-Um usuário poderá fazer o upload de uma foto e uma descrição, associados a um cômodo da república e ao morador que fez o envio. Todos os envios neste formulário serão visíveis para membros da área _responsavel_manutencao_, moradores do quarto afetado (se aplicável), e o responsável pelo envio do pedido. Todos esses deverão ser capazes de ver o status da manutenção (definido pelo responsável pela manutenção), e as outras informações do pedido.
+Um usuário poderá fazer o upload de uma foto e uma descrição, associados a um cômodo da república e ao morador que fez o envio. Todos os envios neste formulário serão visíveis para membros da área ~responsavel_manutencao~, moradores do ~comodo~ afetado (se aplicável), e o responsável pelo envio do pedido. Todos esses deverão ser capazes de ver o status da manutenção (definido pelo responsável pela manutenção), e as outras informações do pedido.
 *** 2.3 Salgados
 A página de salgados deve permitir que os membros visualizem quais são os responsáveis pela venda do salgado a cada dia, registrem o valor gasto, o faturamento, o responsável pelo(s) pagamento(s), adicionar uma observação (opcional), a quantidade de salgados comprados e de salgados vendidos.
-A partir deste registro, membros da área _responsavel_salgado_ poderão extrair relatórios das vendas (em intervalos de tempo definidos pelo usuário), e relatórios específicos sobre os vendedores (ranking de presença, ranking de faturamento, o menos presente).
+A partir deste registro, membros da área ~responsavel_salgado~ poderão extrair relatórios das vendas (em intervalos de tempo definidos pelo usuário), e relatórios específicos sobre os vendedores (ranking de presença, ranking de faturamento, o menos presente).
 *** 2.4 Produtos
-A página de produtos deve permitir o cadastro de produtos por membros da área _responsavel_produtos_, e a visualização de informações sobre os diferentes _drops_, ou 'coleções' de produtos para todos os usuários ativos. As informações incluem custo e faturamento por unidade vendida, mas ainda não armazena informações sobre as vendas.
+A página de produtos deve permitir o cadastro de produtos por membros da área ~responsavel_produtos~, e a visualização de informações sobre os diferentes ~drops~, ou 'coleções' de produtos para todos os usuários ativos. As informações incluem custo e faturamento por unidade vendida, mas ainda não armazena informações sobre as vendas.
 *** 2.5 Usuário
 O usuário será criado a partir de um cadastro, e precisa ser *ativado* manualmente por um administrador do sistema (para garantir que é um morador). Serão armazenadas informações sobre os usuários, seu curso na UFSCar, cômodo que mora, entre outras.
 *** 2.6 Áreas administrativas
-A república é subdividida entre diversas áreas, como _eventos_, _produtos_, _marketing_, e outras. O sistema possuirá uma tabela que relaciona usuários entre áreas existentes, que funcionarão como grupos que definiram algumas permissões e a visibilidade de itens diversos no site, de maneira coerente.
+A república é subdividida entre diversas áreas, como ~eventos~, ~produtos~, ~marketing~, e outras. O sistema possuirá uma tabela que relaciona usuários entre áreas existentes, que funcionarão como grupos que definiram algumas permissões e a visibilidade de itens diversos no site, de maneira coerente.
 ** 3. Requisitos
 *** 3.1 Tech-stack do projeto
 Nix, MySQL, PHP, HTML, CSS e Javascript. Utilizamos a pilha LAMP, junto ao Nix para uma implementação replicável e declarativa do website e suas configurações.
@@ -39,6 +39,8 @@ O diretório ~nix~ contém os arquivos de configuração que transformam o NixOS
 A função primária deste diretório é definir, como código, a totalidade do ambiente operacional, desde os pacotes de software até a estrutura do servidor web e banco de dados.
 
 Em resumo, o diretório nix permite que o ambiente do servidor seja recriado em qualquer máquina, com o mesmo conjunto de serviços e código-fonte, simplesmente aplicando esses arquivos de configuração.
+
+Mais informações estão disponíveis [[./nix/README.org][aqui.]]
 **** 4.2.2 Diretório imgs
 O diretório ~imgs~ serve como um repositório para todos os arquivos de imagem estáticos da aplicação. Nele poderão ser encontrados arquivos ~png~, ~jpg~, ~svg~ e ~gif~. Estas imagens serão utilizadas para compor o layout, e ilustrar tarefas como ~pedido de manutenção~, facilitando o processo de visualizar situações modeladas.
 **** 4.2.3 Diretório pages
