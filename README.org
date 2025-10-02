@@ -1,7 +1,7 @@
 #+TITLE: Diretoria-App Documentation
 #+AUTHOR: grupert
 #+STARTUP: showeverything
-#+PROPERTY: header-args:sql :tangle ./ddl.sql
+#+PROPERTY: header-args:sql :tangle ./database/ddl.sql
 
 * Diretoria-App
 ** 1. Introdução
@@ -47,6 +47,7 @@ Os arquivos ~php~ que representam as páginas completas e visíveis de um site e
 Este diretório armazena os arquivos que compõem a lógica, comportamento e interatividade do sistema. Aqui estarão contidos arquivos ~js~ e ~ts~, para responder às ações do usuário, e manipular dados. Desse modo, separando a camada lógica da estrutura de apresentação do site.
 **** 4.2.5 Diretório database
 O diretório ~database~ armazena arquivos relacionados à estrutura, e dados contidos no SGBD da aplicação. Neste diretório, também haverá o diagrama e definição do banco de dados, além de arquivos necessários para a configuração da conexão.
+[[./imgs/Diagrama.png]]
 1. Definição do banco de dados
    Devemos definir o banco de dados e selecioná-lo para uso. Todas as seguintes definições serão feitas no banco de dados ~diretoria~.
    #+begin_src sql
