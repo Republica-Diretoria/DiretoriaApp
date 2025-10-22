@@ -16,7 +16,10 @@ if (!isset($_SESSION['user'])) {
     $user = $_SESSION['user'];
 }
 
+
+$texto = $_SESSION['areas'];
 ?> 
+
 
 
 <html lang="pr-br">
@@ -29,5 +32,6 @@ if (!isset($_SESSION['user'])) {
 
     <h1>Home Page  </h1>
     <h3><?php echo $user ?></h3>
+    <h3><?php echo $texto ?></h3>
 </body>
 </html>

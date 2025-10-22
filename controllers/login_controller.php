@@ -4,28 +4,65 @@ ini_set('display_errors', 1);
 
 include_once '../database/conexao.php';
 
-echo $user =  mysqli_escape_string($conexao, $_POST['user']);
+///echo $user =  mysqli_escape_string($conexao, $_POST['user']);
+echo $user =  $_POST['user'];
 echo "<br>";
 echo $pass =  mysqli_escape_string($conexao, $_POST['pass']);
 echo "<br>";
 
-$pesquisa_u = mysqli_query($conexao, "SELECT
-  u.id,
-  u.apelido,
-  (
-    SELECT
-      GROUP_CONCAT(AA.nome SEPARATOR ', ')
+if(str_contains($user, '@')) {
+    $user = filter_var($user, FILTER_VALIDATE_EMAIL);
+    if(!$user){
+        echo "<script> alert('Verifique suas credenciais!, Usuário e/ou senha incorreta!'); </script>";
+        echo "<script> history.go(-1) </script>";
+
+    }
+    $pesquisa_u = mysqli_query($conexao, "SELECT
+    u.id,
+    u.apelido,
+    (
+        SELECT
+        GROUP_CONCAT(AA.nome SEPARATOR ', ')
+        FROM
+        areas_administrativas AS AA
+        JOIN usuario_areas AS ua ON ua.area_adm_id = AA.id
+        WHERE
+        ua.usuario_id = u.id
+    ) AS Areas
     FROM
-      areas_administrativas AS AA
-      JOIN usuario_areas AS ua ON ua.area_adm_id = AA.id
+    usuarios AS u
     WHERE
-      ua.usuario_id = u.id
-  ) AS Areas
-FROM
-  usuarios AS u
-WHERE
-  (u.email = 'user' OR u.apelido = '$user')
-  AND u.senha_salted_hashed = MD5('$pass');") or die("MySQL Error: " . $mysqli->Error);
+    (u.email = '$user')
+    AND u.senha_salted_hashed = MD5('$pass');") or die("MySQL Error: " . $mysqli->Error);
+} else {
+    $user = mysqli_escape_string($conexao, $user);
+
+    $pesquisa_u = mysqli_query($conexao, "SELECT
+    u.id,
+    u.apelido,
+    (
+        SELECT
+        GROUP_CONCAT(AA.nome SEPARATOR ', ')
+        FROM
+        areas_administrativas AS AA
+        JOIN usuario_areas AS ua ON ua.area_adm_id = AA.id
+        WHERE
+        ua.usuario_id = u.id
+    ) AS Areas
+    FROM
+    usuarios AS u
+    WHERE
+    (u.apelido = '$user')
+    AND u.senha_salted_hashed = MD5('$pass');") or die("MySQL Error: " . $mysqli->Error);
+} 
+
+if(!$user or !$pass) {
+    echo "<script> alert('Digite os dados corretamente.');</script>";
+}
+
+if (!$pesquisa_u) {
+    echo "<script> alert('$user, xaapo'); </script>";
+}
 
 echo $row = mysqli_num_rows($pesquisa_u);
 
@@ -43,6 +80,7 @@ if ($row) {
     echo "<script>alert('Logado com Sucesso!, Bem vindo, " . $_SESSION['user'] . "');</script>";
     echo "<script>location.href='../pages/home.php';</script>";
 } else {
-    echo "<script> alert('$user, verifique!, Usurio e/ou senha incorreta!'); </script>";
+    echo "<script> alert('$user, verifique suas credenciais!, Usuário e/ou senha incorreta!'); </script>";
     echo "<script> history.go(-1) </script>";
 }
+
