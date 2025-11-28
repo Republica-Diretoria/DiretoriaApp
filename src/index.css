@@ -1,0 +1,28 @@
+/* src/index.css */
+@import "tailwindcss";
+
+@theme {
+  /* Paleta da República Diretoria */
+  --color-diretoria-yellow: #FCEE09;
+  --color-diretoria-dark-yellow: #D4C805;
+  --color-diretoria-black: #0f0f0f;
+  --color-diretoria-gray: #1a1a1a;
+
+  /* Fontes */
+  --font-brush: "Permanent Marker", cursive;
+  --font-sans: "Roboto Condensed", sans-serif;
+
+  /* Texturas */
+  --image-grunge-texture: url('/assets/paper-texture.webp');
+}
+
+/* Estilos Globais */
+@layer base {
+  body {
+    @apply bg-diretoria-black text-white font-sans antialiased;
+  }
+  
+  h1, h2, h3 {
+    @apply font-brush text-diretoria-yellow uppercase tracking-wider;
+  }
+}
