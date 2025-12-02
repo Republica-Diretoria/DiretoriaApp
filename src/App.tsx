@@ -1,23 +1,38 @@
 import { Navbar } from './components/Navbar';
-import { Hero } from './components/Hero'; // Importe o novo Hero
+import { Hero } from './components/Hero';
 import { Structure } from './components/Structure';
+import { Location } from './components/Location';
+import { ScrollAnimation } from './components/ScrollAnimation';
 
 function App() {
   return (
     <div className="min-h-screen bg-diretoria-black selection:bg-diretoria-yellow selection:text-black">
-      <Navbar />
-      <main>
-        {/* Novo Hero Moderno */}
-        <Hero />
+	<Navbar />
+	<main>
+	    <ScrollAnimation>
+		<Hero />
+	    </ScrollAnimation>
 
-	<Structure /> 
 
-        {/* ... Outras seções (Moradores, etc) ... */}
-        <section id="moradores" className="h-[50vh] flex items-center justify-center border-t border-diretoria-yellow/10">
-             <h2 className="text-4xl text-gray-500">Próxima Seção: Moradores</h2>
-        </section>
+	    <ScrollAnimation>
+		<Structure /> 
+	    </ScrollAnimation>
 
-        {/* Seções de Placeholder (manter por enquanto) */}
+	    <ScrollAnimation>
+		<Location />
+	    </ScrollAnimation>
+
+	    <section id="moradores" className="h-[50vh] flex items-center justify-center border-t border-diretoria-yellow/10">
+		    <h2 className="text-4xl text-gray-500">Próxima Seção: Moradores</h2>
+	    </section>
+
+	    <section id="depoimentos" className="h-[50vh] flex items-center justify-center border-t border-diretoria-yellow/10">
+		    <h2 className="text-4xl text-gray-500">Próxima Seção: Depoimentos</h2>
+	    </section>
+
+	    <section id="faq" className="h-[50vh] flex items-center justify-center border-t border-diretoria-yellow/10">
+		    <h2 className="text-4xl text-gray-500">Próxima Seção: FAQ</h2>
+	    </section>
 
       </main>
     </div>

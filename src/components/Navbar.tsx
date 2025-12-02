@@ -1,7 +1,7 @@
 // src/components/Navbar.tsx
 import { useState } from 'react';
 import { Menu, X, MessageCircle } from 'lucide-react'; // Ícones
-import logo from "../assets/logo.png";
+import logo from "../../public/logo_transparencia.png";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,6 +11,7 @@ export function Navbar() {
   // Links de navegação para reutilizar
   const navLinks = [
     { name: 'A CASA', href: '#casa' },
+    { name: 'LOCALIZAÇÃO', href: '#localizacao' },
     { name: 'MORADORES', href: '#moradores' },
     { name: 'DEPOIMENTOS', href: '#depoimentos' },
     { name: 'FAQ', href: '#faq' },
@@ -47,7 +48,7 @@ export function Navbar() {
               
               {/* Botão WhatsApp Desktop */}
               <a 
-                href="https://wa.me/55NUMERODORESPONSAVEL" 
+                href="https://wa.me/5511996375606?text=Salve%2C%20tudo%20bem%3F%20Encontrei%20seu%20contato%20no%20site%20da%20Diretoria%20e%20quero%20trocar%20uma%20ideia." 
                 target="_blank"
                 className="bg-diretoria-yellow text-diretoria-black px-5 py-2 rounded font-bold font-sans flex items-center gap-2 hover:bg-white transition-colors"
               >
