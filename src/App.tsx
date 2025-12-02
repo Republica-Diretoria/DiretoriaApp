@@ -3,6 +3,7 @@ import { Hero } from './components/Hero';
 import { Structure } from './components/Structure';
 import { Location } from './components/Location';
 import { ScrollAnimation } from './components/ScrollAnimation';
+import { Testimonials } from './components/Testimonials';
 
 function App() {
   return (
@@ -26,9 +27,10 @@ function App() {
 		    <h2 className="text-4xl text-gray-500">Próxima Seção: Moradores</h2>
 	    </section>
 
-	    <section id="depoimentos" className="h-[50vh] flex items-center justify-center border-t border-diretoria-yellow/10">
-		    <h2 className="text-4xl text-gray-500">Próxima Seção: Depoimentos</h2>
-	    </section>
+
+	    <ScrollAnimation>
+		<Testimonials />
+	    </ScrollAnimation>
 
 	    <section id="faq" className="h-[50vh] flex items-center justify-center border-t border-diretoria-yellow/10">
 		    <h2 className="text-4xl text-gray-500">Próxima Seção: FAQ</h2>
