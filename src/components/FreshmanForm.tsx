@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { X, Check, GraduationCap, MessageCircle } from 'lucide-react';
 
-// DADOS DE CONFIGURAÇÃO (Aqui você colocará os números reais dos moradores de cada curso)
-// Formato: "55 + DDD + NUMERO" (sem espaços ou traços)
 const courseContacts: Record<string, string> = {
   "Administração": "5511951702995", //tripa
   "Ciências Biológicas": "5519994835044", //mort

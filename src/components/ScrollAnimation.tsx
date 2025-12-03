@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 
 interface ScrollAnimationProps {
   children: ReactNode;
