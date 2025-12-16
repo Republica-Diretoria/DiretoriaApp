@@ -1,7 +1,7 @@
 // src/components/Navbar.tsx
 import { useState } from 'react';
 import { Menu, X, MessageCircle } from 'lucide-react'; // Ícones
-import logo from "../../public/logo_transparencia.png";
+import logo from "../assets/logo_transparencia.png";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
