@@ -4,6 +4,7 @@ import { Structure } from './components/Structure';
 import { Location } from './components/Location';
 import { ScrollAnimation } from './components/ScrollAnimation';
 import { Testimonials } from './components/Testimonials';
+import { FAQ } from './components/FAQ';
 
 function App() {
   return (
@@ -16,16 +17,23 @@ function App() {
 
 
 	    <ScrollAnimation>
-		<Structure /> 
+		<Structure />
 	    </ScrollAnimation>
 
 	    <ScrollAnimation>
 		<Location />
 	    </ScrollAnimation>
 
-
 	    <ScrollAnimation>
 		<Testimonials />
+	    </ScrollAnimation>
+
+	    <ScrollAnimation>
+		<Location />
+	    </ScrollAnimation>
+
+	    <ScrollAnimation>
+		<FAQ />
 	    </ScrollAnimation>
 
       </main>
