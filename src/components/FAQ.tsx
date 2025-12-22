@@ -121,7 +121,7 @@ export function FAQ() {
           </p>
         </div>
 
-        {/* Accordion */}
+        {/* accordion */}
         <div className="max-w-3xl mx-auto space-y-4">
           {faqQA.map((item, index) => {
             const isOpen = openIndex === index;
@@ -167,7 +167,7 @@ export function FAQ() {
           })}
         </div>
         
-        {/* Call to Action Final */}
+        {/* encaminha pro zap */}
         <div className="text-center mt-12">
            <p className="text-gray-400 font-sans mb-4">Ainda tem alguma dúvida?</p>
            <a 
