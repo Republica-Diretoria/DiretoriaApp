@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ChevronDown, ChevronUp, MessageCircleQuestion } from 'lucide-react';
+import fundo from '../assets/fundo_rep.jpg';
 
 const faqQA = [
   {
@@ -99,6 +100,16 @@ export function FAQ() {
 
   return (
     <section id="faq" className="py-24 bg-diretoria-black relative overflow-hidden">
+
+    <div className="absolute inset-0 z-0">
+	    <img 
+	    src={fundo}
+	    alt="Fundo República" 
+	    className="w-full h-full object-cover opacity-100 " // Ajuste a opacity conforme necessário (ex: opacity-20)
+	    />
+	    {/* Camada escura extra para garantir leitura do texto */}
+	    <div className="absolute inset-0 bg-diretoria-black/60 mix-blend-multiply"></div>
+      </div>
   
       {/* elementos do fundo */}
     <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-diretoria-yellow to-transparent opacity-50"></div>
@@ -122,7 +133,7 @@ export function FAQ() {
         </div>
 
         {/* accordion */}
-        <div className="max-w-3xl mx-auto space-y-4">
+        <div className="max-w-3sm mx-auto space-y-4">
           {faqQA.map((item, index) => {
             const isOpen = openIndex === index;
 
