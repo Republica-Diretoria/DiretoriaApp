@@ -32,7 +32,7 @@ const photos = [
 
 // Ícones de facilidades
 const features = [
-  { icon: <Wifi />, text: "Internet Fibra 600Mb" },
+  { icon: <Wifi />, text: "Internet Fibra 1GB" },
   { icon: <Waves />, text: "Piscina" },
   { icon: <Bean />, text: "Compras compartilhadas" },
   { icon: <Gamepad2 />, text: "Área de Jogos" },
